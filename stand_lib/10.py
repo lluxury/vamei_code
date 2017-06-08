@@ -58,6 +58,7 @@ for process in record:
     process.join()
 
 
+#join()阻塞主进程结束
 #Linux多线程 管道PIPE和消息队列message queue
 # multiprocessing包中有Pipe类和Queue类来分别支持这两种IPC机制
 # Pipe可以是单向(half-duplex)，也可以是双向(duplex) 我们通过mutiprocessing.Pipe(duplex=False)创建单向管道 (默认为双向)
