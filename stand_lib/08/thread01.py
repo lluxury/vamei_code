@@ -2,17 +2,22 @@ import threading
 import time
 
 count = 1
+lock = threading.Lock()
 
 class KissThread(threading.Thread):
     def run(self):
+        global lock
+        lock.acquire()
         global count
         print ("Thread # %s:  Pretending to do stuff" % count)
         count += 1
         time.sleep(2)
         print ("done with stuff")
+        lock.release()
 
 for t in range(5):
     KissThread().start()
+
 
 
 #global 的写法怪怪的, 有没有其他写法
@@ -25,3 +30,5 @@ for t in range(5):
 # Thread # 1: Pretending to do stuff
 #  Thread # 1: Pretending to do stuff
 # Thread # 3: Pretending to do stuff
+
+#增加锁,现象解决
