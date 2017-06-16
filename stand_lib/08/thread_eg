@@ -1,0 +1,124 @@
+#tmp
+
+import thread, time, random
+count = 0
+def threadTest():
+    global count
+    for i in xrange(10000):
+        count += 1
+for i in range(10):
+    thread.start_new_thread(threadTest, ())
+time.sleep(3)
+print count
+#不是10w
+
+
+
+import thread, time
+def threadFunc(a = None, b = None, c = None, d = None):
+    print time.strftime('%H:%M:%S', time.localtime()), a
+    time.sleep(1)    
+    print time.strftime('%H:%M:%S', time.localtime()), b
+    time.sleep(1)
+    print time.strftime('%H:%M:%S', time.localtime()), c
+    time.sleep(1)
+    print time.strftime('%H:%M:%S', time.localtime()), d
+    time.sleep(1)
+    print time.strftime('%H:%M:%S', time.localtime()), 'over'
+ 
+thread.start_new_thread(threadFunc, (3, 4, 5, 6)) 
+time.sleep(5)
+#单个线程不影响其它
+
+
+# thread.start_new_thread ( function , args [ , kwargs ] )
+# thread.exit ()
+# 结束当前线程。调用该函数会触发 SystemExit 异常，如果没有处理该异常，线程将结束。
+# thread.get_ident ()
+# 返回当前线程的标识符，标识符是一个非零整数
+
+import thread, time
+thread.start_new_thread(lambda : (thread.interrupt_main(), ), ())
+try:
+    time.sleep(2)
+except KeyboardInterrupt, e:
+    print 'error:', e
+print 'over'
+
+# lock.acquire ( [ waitflag ] )   获取琐, 标志为0 线程不等待
+# lock.release ()
+# lock.locked ()
+# 判断琐是否被占用
+
+import thread, time, random
+count = 0
+lock = thread.allocate_lock() #创建一个琐对象
+def threadTest():
+    global count, lock
+    lock.acquire() #获取琐
+ 
+    for i in xrange(10000):
+        count += 1
+ 
+    lock.release() #释放琐
+for i in xrange(10):
+    thread.start_new_thread(threadTest, ())
+time.sleep(3)
+print count
+
+
+import threading, time, random
+count = 0
+class Counter(threading.Thread):
+    def __init__(self, lock, threadName):
+        '''@summary: 初始化对象。
+        
+        @param lock: 琐对象。
+        @param threadName: 线程名称。
+        '''
+        super(Counter, self).__init__(name = threadName)  #注意：一定要显式的调用父类的初始化函数。
+        self.lock = lock
+    
+    def run(self):
+        '''@summary: 重写父类run方法，在线程启动后执行该方法内的代码。
+        '''
+        global count
+        self.lock.acquire()
+        for i in xrange(10000):
+            count = count + 1
+        self.lock.release()
+lock = threading.Lock()
+for i in range(5): 
+    Counter(lock, "thread-" + str(i)).start()
+time.sleep(2)   #确保线程都执行完毕
+print count
+
+
+
+import threading, time, random
+count = 0
+lock = threading.Lock()
+def doAdd():
+    '''@summary: 将全局变量count 逐一的增加10000。
+    '''
+    global count, lock
+    lock.acquire()
+    for i in xrange(10000):
+        count = count + 1
+    lock.release()
+for i in range(5):
+    threading.Thread(target = doAdd, args = (), name = 'thread-' + str(i)).start()
+time.sleep(2)   #确保线程都执行完毕
+print count
+
+import threading, time
+def doWaiting():
+    print 'start waiting:', time.strftime('%H:%M:%S')
+    time.sleep(3)
+    print 'stop waiting', time.strftime('%H:%M:%S')
+thread1 = threading.Thread(target = doWaiting)
+thread1.start()
+time.sleep(1)  #确保线程thread1已经启动
+print 'start join'
+thread1.join()  #将一直堵塞，直到thread1运行结束。
+print 'end join'
