@@ -52,7 +52,24 @@ def square_diff(a, b):
 print(square_sum(3, 4))
 print(square_diff(3, 4))
 #装饰器写法
-#定义装饰器F, 定义函数new_F,函数功能及返回调用,反回函数
+
+
+import time
+def war(name):
+        def cost():
+            start =time.time()gg
+            name()
+            stop = time.time()
+            print("run time is %s" %(stop-start))
+        return cost
+@war
+def info():
+    time.sleep(3)
+    print('we are family!')
+
+info()
+#定义装饰器war, 定义函数cost,函数功能及返回调用,反回函数,比较直观
+#return 必须添加,不然会报错
 
 # 在函数square_sum和square_diff定义之前调用@decorator，
 # 实际上将square_sum或square_diff传递给decorator，并将decorator返回的新的可调用对象赋给原来的函数名(square_sum或square_diff)
