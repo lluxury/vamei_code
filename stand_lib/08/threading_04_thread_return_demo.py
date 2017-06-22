@@ -21,6 +21,6 @@ f.start()
 while f.isAlive():
     continue
 
-print f.get_result()
+print (f.get_result())
 
 # 输是传出来了,怎么应用
